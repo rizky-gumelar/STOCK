@@ -28,7 +28,7 @@ def extract_xmp_metadata(xmp_content):
     return title, description, keywords
 
 # Ambil dan ekstrak metadata dari file PNG
-with Image.open("sizing/3d (136).png") as img:
+with Image.open("file_baru.png") as img:
     xmp_data = img.info.get("XML:com.adobe.xmp")
 
     if xmp_data:
