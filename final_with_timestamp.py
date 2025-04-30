@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 from PIL import Image, PngImagePlugin
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 
 MAX_DIMENSION = 5500  # Maksimal panjang/lebar pixel
 
@@ -51,10 +52,14 @@ def create_xmp_packet(title, description, keywords):
 </x:xmpmeta>
 <?xpacket end='w'?>"""
 
-def resize_and_save_with_metadata(input_path, output_folder):
+def resize_and_save_with_metadata(input_path, output_folder, file_index):
+    # Ambil tanggal saat ini untuk nama file
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    
+    # Format nama file baru: YYYYMMDD_HHMMSS_urutan.png
     filename = os.path.basename(input_path)
     name, ext = os.path.splitext(filename)
-    new_filename = f"{name}_rawr{ext}"
+    new_filename = f"{timestamp}_{file_index:03d}{ext}"  # Menambahkan urutan dengan 3 digit (misal: 001, 002, dst)
     output_path = os.path.join(output_folder, new_filename)
 
     try:
@@ -92,7 +97,8 @@ def process_folder(input_folder, output_folder):
                    if f.lower().endswith('.png')]
 
     with ThreadPoolExecutor(max_workers=4) as executor:
-        list(tqdm(executor.map(lambda f: resize_and_save_with_metadata(f, output_folder), image_files),
+        list(tqdm(executor.map(lambda f, idx: resize_and_save_with_metadata(f, output_folder, idx),
+                               image_files, range(1, len(image_files) + 1)),
                   total=len(image_files),
                   desc="Processing PNG Images"))
 
