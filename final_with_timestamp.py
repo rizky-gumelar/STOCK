@@ -5,7 +5,7 @@ from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-MAX_DIMENSION = 5500  # Maksimal panjang/lebar pixel
+MAX_DIMENSION = 7000  # Maksimal panjang/lebar pixel
 
 def extract_xmp_metadata(xmp_content):
     if isinstance(xmp_content, bytes):
